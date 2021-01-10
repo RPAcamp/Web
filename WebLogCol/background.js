@@ -24,7 +24,6 @@ chrome.runtime.onMessage.addListener(function(message, sender1, sendResponse){
                 },
                 cmd: 'exportall',
             })
-            sendMsg();
             break;
         case 'exportlatest': 
             sendResponse({
@@ -34,38 +33,11 @@ chrome.runtime.onMessage.addListener(function(message, sender1, sendResponse){
                 },
                 cmd: 'exportall',
             })
-            sendMsg();
             break;
         default: 
             break;
     }
 });
-
-// function sendMsg() {
-// 
-//     // userActionInfo browserInfo就是要传送的数据
-//     sendNativeMessage(JSON.stringify({
-//         userActionInfo, 
-//         browserInfo
-//     }));
-// }
-
-function sendMsg()
-{
-    var ws = new WebSocket("ws://localhost:40411/echo");
-
-    ws.onmessage = function(evt){
-        var received_msg = evt.data;
-        console.log("Server:" + evt.data);
-    }
-    ws.onclose = function(){
-    }
-    ws.onopen = function()
-    {
-        ws.send(userActionInfo);
-        ws.send(browserInfo);
-    }
-}
 
 
 

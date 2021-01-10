@@ -83,139 +83,139 @@ function collectInfo() {
 
 
 //输出数据文件
-// function arrayToCsv(data, args = {}) {
-//     let columnDelimiter = args.columnDelimiter || ',';
-//     let lineDelimiter = args.lineDelimiter || '\n';
+function arrayToCsv(data, args = {}) {
+    let columnDelimiter = args.columnDelimiter || ',';
+    let lineDelimiter = args.lineDelimiter || '\n';
 
-//     return data.reduce((csv, row) => {
-//         const rowContent = Array.isArray(row)
-//             ? row.reduce((rowTemp, col) => {
-//                 let ret = rowTemp ? rowTemp + columnDelimiter : rowTemp;
+    return data.reduce((csv, row) => {
+        const rowContent = Array.isArray(row)
+            ? row.reduce((rowTemp, col) => {
+                let ret = rowTemp ? rowTemp + columnDelimiter : rowTemp;
                 
-//                 let formatedCol = col.toString().replace(new RegExp(lineDelimiter, 'g'), ' ');
-//                 ret += /,/.test(formatedCol) ? `"${formatedCol}"` : formatedCol;
+                let formatedCol = col.toString().replace(new RegExp(lineDelimiter, 'g'), ' ');
+                ret += /,/.test(formatedCol) ? `"${formatedCol}"` : formatedCol;
             
-//                 return ret;
-//             }, '')
-//             : row;
-//         return (csv ? csv + lineDelimiter : '') + rowContent;
-//     }, '');
-// }
+                return ret;
+            }, '')
+            : row;
+        return (csv ? csv + lineDelimiter : '') + rowContent;
+    }, '');
+}
 
-// const BOM = '\uFEFF';
-// function objToArray(obj) {
-//     let arr = [];
-//     for (const [key, value] of Object.entries(obj)) {
-//         if (typeof value === 'object') {
-//             arr.push(objToArray(value));
-//         }
-//         else {
-//             arr.push([key, value]);
-//         }
-//     }
-//     return arr;
-// }
+const BOM = '\uFEFF';
+function objToArray(obj) {
+    let arr = [];
+    for (const [key, value] of Object.entries(obj)) {
+        if (typeof value === 'object') {
+            arr.push(objToArray(value));
+        }
+        else {
+            arr.push([key, value]);
+        }
+    }
+    return arr;
+}
 
-// function objToArray(obj) {
-//     let arr = [];
-//     for (const [key, value] of Object.entries(obj)) {
-//         if (typeof value === 'undefined') {
-//             arr.push([key, 'undefined']);
-//         }
-//         else if (!value && typeof value != "undefined" && value != 0) {
-//             arr.push([key, 'null']);
-//         }
-//         else if (Object.prototype.toString.call(value) === '[object Object]') {
-//             arr.push(objToArray(value));
-//         }
-//         else if (Object.prototype.toString.call(value) === '[object Array]') {
-//             console.log('arr');
+function objToArray(obj) {
+    let arr = [];
+    for (const [key, value] of Object.entries(obj)) {
+        if (typeof value === 'undefined') {
+            arr.push([key, 'undefined']);
+        }
+        else if (!value && typeof value != "undefined" && value != 0) {
+            arr.push([key, 'null']);
+        }
+        else if (Object.prototype.toString.call(value) === '[object Object]') {
+            arr.push(objToArray(value));
+        }
+        else if (Object.prototype.toString.call(value) === '[object Array]') {
+            console.log('arr');
 
-//             console.log(JSON.stringify(value).replace(/,/g, ' '));
-//             arr.push([key, JSON.stringify(value).replace(/,/g, ' ')]);
-//         }
-//         else {
-//             arr.push([key, value]);
-//         }
-//     }
-//     return arr;
-// }
+            console.log(JSON.stringify(value).replace(/,/g, ' '));
+            arr.push([key, JSON.stringify(value).replace(/,/g, ' ')]);
+        }
+        else {
+            arr.push([key, value]);
+        }
+    }
+    return arr;
+}
 
-// function objToFormattedArray(obj) {//转换数据格式
-//     let arr = objToArray(obj);
+function objToFormattedArray(obj) {//转换数据格式
+    let arr = objToArray(obj);
 
-//     arr = arr.flat(Infinity);
-//     let keys = [];
-//     let values = [];
-//     for (let i = 0; i < arr.length; i ++) {
-//         if (i % 2 === 0) {
-//             keys.push(arr[i]);
-//         }
-//         else {
-//             values.push(arr[i]);
-//         }
-//     }
-//     console.log([keys, values]);
-//     return [keys, values];
-// }
+    arr = arr.flat(Infinity);
+    let keys = [];
+    let values = [];
+    for (let i = 0; i < arr.length; i ++) {
+        if (i % 2 === 0) {
+            keys.push(arr[i]);
+        }
+        else {
+            values.push(arr[i]);
+        }
+    }
+    console.log([keys, values]);
+    return [keys, values];
+}
 
-// function exportCsv(inputObj, filename = 'export.csv') {//导出csv文件并储存
-//     console.log(inputObj);
-//     const arr = objToFormattedArray(inputObj)
-//     const csv = arrayToCsv(arr);
+function exportCsv(inputObj, filename = 'export.csv') {//导出csv文件并储存
+    console.log(inputObj);
+    const arr = objToFormattedArray(inputObj)
+    const csv = arrayToCsv(arr);
 
-//     if (navigator.msSaveOrOpenBlob) {
-//         let blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
-//         navigator.msSaveOrOpenBlob(blob, filename);
-//     } else {
-//         let uri = encodeURI(`data:text/csv;charset=utf-8,${BOM}${csv}`);
-//         let downloadLink = document.createElement('a');
-//         downloadLink.href = uri;
-//         downloadLink.download = filename;
-//         document.body.appendChild(downloadLink);
-//         downloadLink.click();
-//         document.body.removeChild(downloadLink);
-//     }
-// }
+    if (navigator.msSaveOrOpenBlob) {
+        let blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
+        navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+        let uri = encodeURI(`data:text/csv;charset=utf-8,${BOM}${csv}`);
+        let downloadLink = document.createElement('a');
+        downloadLink.href = uri;
+        downloadLink.download = filename;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+}
 
-// function getTime() {
-//     const date = new Date();
-//     return '_' + date.getFullYear() + '_' + (date.getMonth()+1) + '_' + 
-//         date.getDate() + '_' + date.getHours() + '_' + date.getMinutes() +
-//         '_' + date.getSeconds();
-// }
+function getTime() {
+    const date = new Date();
+    return '_' + date.getFullYear() + '_' + (date.getMonth()+1) + '_' + 
+        date.getDate() + '_' + date.getHours() + '_' + date.getMinutes() +
+        '_' + date.getSeconds();
+}
 
-// function exportLatest() {
-//     if (browserInfo.length > 0) {
-//         const time = getTime();
-//         exportCsv(browserInfo[browserInfo.length - 1], `webinfo${time}_latest.csv`)
-//     }
-//     if (userActionInfo.length > 0) {
-//         const time = getTime();
-//         exportCsv(userActionInfo[userActionInfo.length - 1], `userinfo${time}_latest.csv`)
-//     }
-// }
+function exportLatest() {
+    if (browserInfo.length > 0) {
+        const time = getTime();
+        exportCsv(browserInfo[browserInfo.length - 1], `webinfo${time}_latest.csv`)
+    }
+    if (userActionInfo.length > 0) {
+        const time = getTime();
+        exportCsv(userActionInfo[userActionInfo.length - 1], `userinfo${time}_latest.csv`)
+    }
+}
 
-// function exportAll() {
-//     if (browserInfo.length > 0) {
-//         let time;
-//         for (let i = 0; i < browserInfo.length; i ++) {
-//             time = getTime();
-//             exportCsv(browserInfo[i], `webinfo${time}_${i+1}.csv`);
-//         }
-//     }
+function exportAll() {
+    if (browserInfo.length > 0) {
+        let time;
+        for (let i = 0; i < browserInfo.length; i ++) {
+            time = getTime();
+            exportCsv(browserInfo[i], `webinfo${time}_${i+1}.csv`);
+        }
+    }
 
-//     if (userActionInfo.length > 0) {
-//         let time;
-//         for (let i = 0; i < userActionInfo.length; i ++) {
-//             time = getTime();
-//             exportCsv(userActionInfo[i], `userinfo${time}-${i+1}.csv`);
-//         }
-//     }
-// }
+    if (userActionInfo.length > 0) {
+        let time;
+        for (let i = 0; i < userActionInfo.length; i ++) {
+            time = getTime();
+            exportCsv(userActionInfo[i], `userinfo${time}-${i+1}.csv`);
+        }
+    }
+}
 
-// function formatUserInfo() {
-//     let headers = [];
-//     let body = [];
-//     console.log(userActionInfo);
-// }
+function formatUserInfo() {
+    let headers = [];
+    let body = [];
+    console.log(userActionInfo);
+}
